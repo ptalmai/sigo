@@ -171,11 +171,11 @@ export function buildSavingTimelineData(
       if (projectLancamentos.length === 0) return null
 
       // VA linear por mês (fallback quando tabela mensal não tem dado para o mês)
-      // +1 para incluir ambos os meses extremos (jan→ago = 8 meses, não 7)
       const startDate = parseBRDate(p.data_inicio)
       const endDate = parseBRDate(p.data_fim)
-      const duration = Math.max(differenceInCalendarMonths(endDate, startDate) + 1, 1)
+      const duration = Math.max(differenceInCalendarMonths(endDate, startDate), 1)
       const cmmLinear = p.valor_aprovado > 0 ? p.valor_aprovado / duration : 0
+      console.log(`[SIGO] saving "${p.nome_projeto}": valor_aprovado=${p.valor_aprovado} inicio=${p.data_inicio} fim=${p.data_fim} duration=${duration} VA/mês=${Math.round(cmmLinear)}`)
 
       // Monthly lookup for this project (keys already lowercase e.g. "jan/25")
       const monthlyTable = valoresAprovados[p.nome_projeto] ?? {}
