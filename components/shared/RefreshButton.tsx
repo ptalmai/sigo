@@ -27,7 +27,7 @@ export function RefreshButton() {
       size="sm"
       onClick={handleRefresh}
       disabled={loading}
-      className="gap-2 border-[#1e2235] bg-[#13151e] text-slate-300 hover:bg-[#1e2235] hover:text-white"
+      className="gap-2 border-slate-200 bg-white text-slate-700 hover:bg-slate-100 hover:text-slate-900 dark:border-[#1e2235] dark:bg-[#13151e] dark:text-slate-300 dark:hover:bg-[#1e2235] dark:hover:text-white"
     >
       <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
       Atualizar

@@ -18,8 +18,15 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="pt-BR" className={`${montserrat.variable} antialiased`}>
-      <body className="min-h-screen bg-[#0a0c12] text-slate-200">
+    <html lang="pt-BR" className={`${montserrat.variable} antialiased`} suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){var s=localStorage.getItem('sigo-theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.classList.add(s||(d?'dark':'light'));})();`,
+          }}
+        />
+      </head>
+      <body className="min-h-screen" suppressHydrationWarning>
         {children}
         <Toaster position="bottom-right" duration={5000} richColors />
       </body>

@@ -45,21 +45,21 @@ export function DashboardClient({ projects, lancamentos, valoresAprovados }: Pro
   return (
     <>
       {/* Filter bar */}
-      <div className="flex flex-wrap items-center gap-3 border-b border-[#1e2235] bg-[#0d0f17] px-6 py-3">
+      <div className="flex flex-wrap items-center gap-3 border-b border-slate-200 bg-slate-50 px-6 py-3 dark:border-[#1e2235] dark:bg-[#0d0f17]">
         {/* Busca por nome */}
         <div className="relative">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-500" />
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
           <input
             type="text"
             placeholder="Buscar projeto…"
             value={nome}
             onChange={(e) => setNome(e.target.value)}
-            className="h-8 w-52 rounded-lg border border-[#1e2235] bg-[#13151e] pl-9 pr-3 text-xs text-slate-200 placeholder-slate-600 outline-none transition-colors focus:border-violet-500/50"
+            className="h-8 w-52 rounded-lg border border-slate-200 bg-white pl-9 pr-3 text-xs text-slate-800 placeholder-slate-400 outline-none transition-colors focus:border-violet-500/50 dark:border-[#1e2235] dark:bg-[#13151e] dark:text-slate-200 dark:placeholder-slate-600"
           />
           {nome && (
             <button
               onClick={() => setNome('')}
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
               aria-label="Limpar busca"
             >
               <X className="h-3 w-3" />
@@ -72,14 +72,14 @@ export function DashboardClient({ projects, lancamentos, valoresAprovados }: Pro
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value as ProjectStatus | '')}
-            className="h-8 appearance-none rounded-lg border border-[#1e2235] bg-[#13151e] px-3 pr-7 text-xs text-slate-200 outline-none transition-colors focus:border-violet-500/50"
+            className="h-8 appearance-none rounded-lg border border-slate-200 bg-white px-3 pr-7 text-xs text-slate-800 outline-none transition-colors focus:border-violet-500/50 dark:border-[#1e2235] dark:bg-[#13151e] dark:text-slate-200"
           >
             <option value="">Todos os status</option>
             {STATUS_OPTIONS.map((s) => (
               <option key={s} value={s}>{s}</option>
             ))}
           </select>
-          <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 text-[10px]">▼</span>
+          <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 text-[10px]">▼</span>
         </div>
 
         {/* Health score */}
@@ -87,14 +87,14 @@ export function DashboardClient({ projects, lancamentos, valoresAprovados }: Pro
           <select
             value={health}
             onChange={(e) => setHealth(e.target.value as HealthScoreStatus | '')}
-            className="h-8 appearance-none rounded-lg border border-[#1e2235] bg-[#13151e] px-3 pr-7 text-xs text-slate-200 outline-none transition-colors focus:border-violet-500/50"
+            className="h-8 appearance-none rounded-lg border border-slate-200 bg-white px-3 pr-7 text-xs text-slate-800 outline-none transition-colors focus:border-violet-500/50 dark:border-[#1e2235] dark:bg-[#13151e] dark:text-slate-200"
           >
             <option value="">Todos os healths</option>
             {HEALTH_OPTIONS.map((h) => (
               <option key={h} value={h}>{h}</option>
             ))}
           </select>
-          <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 text-[10px]">▼</span>
+          <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 text-[10px]">▼</span>
         </div>
 
         {/* Resultado + limpar */}
@@ -107,7 +107,7 @@ export function DashboardClient({ projects, lancamentos, valoresAprovados }: Pro
           {hasFilters && (
             <button
               onClick={clearFilters}
-              className="flex items-center gap-1 rounded-md border border-[#1e2235] bg-[#13151e] px-2.5 py-1 text-[11px] text-slate-400 transition-colors hover:border-violet-500/40 hover:text-violet-400"
+              className="flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2.5 py-1 text-[11px] text-slate-600 transition-colors hover:border-violet-500/40 hover:text-violet-600 dark:border-[#1e2235] dark:bg-[#13151e] dark:text-slate-400 dark:hover:text-violet-400"
             >
               <X className="h-3 w-3" />
               Limpar filtros
@@ -124,14 +124,14 @@ export function DashboardClient({ projects, lancamentos, valoresAprovados }: Pro
 
         {/* Gráficos */}
         <section aria-label="Gráficos" className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <div className="rounded-xl border border-[#1e2235] bg-[#13151e] p-5">
-            <h3 className="text-sm font-semibold text-slate-200">Burn vs Execução</h3>
+          <div className="rounded-xl border border-slate-200 bg-white p-5 dark:border-[#1e2235] dark:bg-[#13151e]">
+            <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-200">Burn vs Execução</h3>
             <p className="mb-4 text-[11px] text-slate-500">% verba utilizada vs % execução física por projeto</p>
             <BurnVsExecutionChart data={burnData} />
           </div>
 
-          <div className="rounded-xl border border-[#1e2235] bg-[#13151e] p-5">
-            <h3 className="text-sm font-semibold text-slate-200">Saving Mensal</h3>
+          <div className="rounded-xl border border-slate-200 bg-white p-5 dark:border-[#1e2235] dark:bg-[#13151e]">
+            <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-200">Saving Mensal</h3>
             <p className="mb-4 text-[11px] text-slate-500">
               <span className="text-orange-400">Linha laranja</span> = VA (valor aprovado/mês) ·{' '}
               <span className="text-violet-400">Barra</span> = pagamento real ·{' '}

@@ -9,6 +9,7 @@ import { RefreshButton } from '@/components/shared/RefreshButton'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { DashboardClient } from '@/components/dashboard/DashboardClient'
 import { AlertTriangle, TrendingUp, CheckCircle2, DollarSign } from 'lucide-react'
+import { ThemeToggle } from '@/components/shared/ThemeToggle'
 
 async function DashboardContent() {
   let data
@@ -63,15 +64,16 @@ async function DashboardContent() {
   return (
     <>
       {/* Top bar */}
-      <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-[#1e2235] bg-[#0a0c12]/80 px-6 backdrop-blur">
+      <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-slate-200 bg-slate-50/80 px-6 backdrop-blur dark:border-[#1e2235] dark:bg-[#0a0c12]/80">
         <div>
-          <h1 className="text-sm font-bold text-white">Dashboard Executivo</h1>
+          <h1 className="text-sm font-bold text-slate-900 dark:text-white">Dashboard Executivo</h1>
           <p className="text-[10px] text-slate-500">Portfólio · {projects.length} projeto{projects.length !== 1 ? 's' : ''}</p>
         </div>
         <div className="flex items-center gap-3">
           <span className="text-[11px] text-slate-500">
             Atualizado {formatRelativeTime(fetchedAt)}
           </span>
+          <ThemeToggle />
           <RefreshButton />
         </div>
       </header>
@@ -85,12 +87,12 @@ async function DashboardContent() {
               className={`rounded-xl border p-4 ${k.accent}`}
             >
               <div className="mb-3 flex items-center justify-between">
-                <p className="text-xs font-medium text-slate-400">{k.label}</p>
-                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#1e2235]">
+                <p className="text-xs font-medium text-slate-600 dark:text-slate-400">{k.label}</p>
+                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-200 dark:bg-[#1e2235]">
                   {k.icon}
                 </div>
               </div>
-              <p className="text-2xl font-bold tabular-nums text-white">{k.value}</p>
+              <p className="text-2xl font-bold tabular-nums text-slate-900 dark:text-white">{k.value}</p>
               <p className="mt-1 text-[11px] text-slate-500">{k.sub}</p>
             </div>
           ))}
@@ -115,22 +117,22 @@ function DashboardError() {
 
 export default function HomePage() {
   return (
-    <div className="flex min-h-screen bg-[#0a0c12]">
+    <div className="flex min-h-screen bg-slate-50 dark:bg-[#0a0c12]">
       <Sidebar />
       <div className="flex-1 pl-56">
         <Suspense
           fallback={
             <>
-              <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-[#1e2235] bg-[#0a0c12] px-6">
+              <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-slate-200 bg-slate-50 px-6 dark:border-[#1e2235] dark:bg-[#0a0c12]">
                 <div>
-                  <h1 className="text-sm font-bold text-white">Dashboard Executivo</h1>
+                  <h1 className="text-sm font-bold text-slate-900 dark:text-white">Dashboard Executivo</h1>
                   <p className="text-[10px] text-slate-500">Carregando…</p>
                 </div>
               </header>
               <main className="space-y-6 p-6">
                 <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
                   {[...Array(4)].map((_, i) => (
-                    <div key={i} className="h-24 animate-pulse rounded-xl bg-[#13151e]" />
+                    <div key={i} className="h-24 animate-pulse rounded-xl bg-slate-200 dark:bg-[#13151e]" />
                   ))}
                 </div>
                 <SkeletonTable rows={6} cols={10} />

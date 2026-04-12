@@ -40,10 +40,10 @@ function ProgressBar({ value, colorClass }: { value: number; colorClass: string 
   const pct = Math.min(100, Math.max(0, value))
   return (
     <div className="flex items-center gap-2">
-      <div className="h-1.5 w-20 overflow-hidden rounded-full bg-[#1e2235]">
+      <div className="h-1.5 w-20 overflow-hidden rounded-full bg-slate-200 dark:bg-[#1e2235]">
         <div className={`h-full rounded-full ${colorClass}`} style={{ width: `${pct}%` }} />
       </div>
-      <span className="text-xs tabular-nums text-slate-400">{Math.round(value)}%</span>
+      <span className="text-xs tabular-nums text-slate-600 dark:text-slate-400">{Math.round(value)}%</span>
     </div>
   )
 }
@@ -72,7 +72,7 @@ export function ProjectsTable({ projects }: Props) {
     return (
       <button
         onClick={() => handleSort(col)}
-        className={`ml-1 inline-flex items-center transition-colors ${active ? 'text-violet-400' : 'text-slate-600 hover:text-slate-400'}`}
+        className={`ml-1 inline-flex items-center transition-colors ${active ? 'text-violet-400' : 'text-slate-400 hover:text-slate-600 dark:text-slate-600 dark:hover:text-slate-400'}`}
         aria-label={`Ordenar por ${col}`}
       >
         <ArrowUpDown className="h-3 w-3" />
@@ -82,19 +82,19 @@ export function ProjectsTable({ projects }: Props) {
 
   if (projects.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-xl border border-[#1e2235] bg-[#13151e] py-16 text-center">
-        <p className="text-sm font-semibold text-slate-300">Nenhum projeto encontrado na planilha.</p>
+      <div className="flex flex-col items-center justify-center rounded-xl border border-slate-200 bg-white py-16 text-center dark:border-[#1e2235] dark:bg-[#13151e]">
+        <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">Nenhum projeto encontrado na planilha.</p>
         <p className="mt-1 text-sm text-slate-500">Verifique se a aba &apos;projetos&apos; está preenchida corretamente.</p>
       </div>
     )
   }
 
   return (
-    <div className="overflow-auto rounded-xl border border-[#1e2235] bg-[#13151e]">
+    <div className="overflow-auto rounded-xl border border-slate-200 bg-white dark:border-[#1e2235] dark:bg-[#13151e]">
       <table className="w-full text-sm">
         <caption className="sr-only">Tabela de projetos com métricas orçamentárias</caption>
         <thead>
-          <tr className="border-b border-[#1e2235]">
+          <tr className="border-b border-slate-200 dark:border-[#1e2235]">
             {[
               { label: 'Projeto', col: 'nome_projeto' as SortKey },
               { label: 'Última OP', col: null },
@@ -118,7 +118,7 @@ export function ProjectsTable({ projects }: Props) {
             ))}
           </tr>
         </thead>
-        <tbody className="divide-y divide-[#1e2235]">
+        <tbody className="divide-y divide-slate-100 dark:divide-[#1e2235]">
           {sorted.map((p) => {
             const verbaPct = p.metrics.verba_utilizada_pct ?? 0
             const verbColorClass =
@@ -130,14 +130,14 @@ export function ProjectsTable({ projects }: Props) {
             return (
               <tr
                 key={p.nome_projeto}
-                className="transition-colors hover:bg-[#1a1d2a]"
+                className="transition-colors hover:bg-slate-50 dark:hover:bg-[#1a1d2a]"
               >
-                <td className="px-4 py-3 font-medium text-slate-200">{p.nome_projeto}</td>
-                <td className="px-4 py-3 font-mono text-xs text-slate-500">{p.metrics.ultima_op || '—'}</td>
-                <td className="px-4 py-3 text-xs text-slate-400">{formatDate(p.data_inicio)}</td>
-                <td className="px-4 py-3 text-xs text-slate-400">{formatDate(p.data_fim)}</td>
-                <td className="px-4 py-3 text-right text-slate-300">{formatBRL(p.valor_aprovado)}</td>
-                <td className="px-4 py-3 text-right text-slate-300">{formatBRL(p.metrics.valor_gasto)}</td>
+                <td className="px-4 py-3 font-medium text-slate-800 dark:text-slate-200">{p.nome_projeto}</td>
+                <td className="px-4 py-3 font-mono text-xs text-slate-400 dark:text-slate-500">{p.metrics.ultima_op || '—'}</td>
+                <td className="px-4 py-3 text-xs text-slate-600 dark:text-slate-400">{formatDate(p.data_inicio)}</td>
+                <td className="px-4 py-3 text-xs text-slate-600 dark:text-slate-400">{formatDate(p.data_fim)}</td>
+                <td className="px-4 py-3 text-right text-slate-700 dark:text-slate-300">{formatBRL(p.valor_aprovado)}</td>
+                <td className="px-4 py-3 text-right text-slate-700 dark:text-slate-300">{formatBRL(p.metrics.valor_gasto)}</td>
                 <td className="px-4 py-3">
                   <ProgressBar value={verbaPct} colorClass={verbColorClass} />
                 </td>
