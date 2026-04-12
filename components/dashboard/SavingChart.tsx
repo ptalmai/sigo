@@ -63,7 +63,8 @@ function ProjectMiniChart({ data }: { data: ProjectSavingData }) {
         <div className="min-w-0">
           <p className="truncate text-xs font-semibold text-slate-200">{data.nome_projeto}</p>
           <p className="text-[10px] text-slate-500">
-            VA: <span className="text-orange-400 font-medium">{formatBRL(data.cmm)}/mês</span>
+            VA total aprovado:{' '}
+            <span className="text-orange-400 font-medium">{formatBRL(data.totalCmm)}</span>
           </p>
         </div>
         <div className={`flex-shrink-0 rounded-lg px-2.5 py-1 text-center ${isSaving ? 'bg-green-500/10' : 'bg-red-500/10'}`}>
