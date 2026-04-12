@@ -133,7 +133,7 @@ export function DashboardClient({ projects, lancamentos, valoresAprovados }: Pro
           <div className="rounded-xl border border-[#1e2235] bg-[#13151e] p-5">
             <h3 className="text-sm font-semibold text-slate-200">Saving Mensal</h3>
             <p className="mb-4 text-[11px] text-slate-500">
-              <span className="text-orange-400">Linha laranja</span> = CMM (média aprovada) ·{' '}
+              <span className="text-orange-400">Linha laranja</span> = VA (valor aprovado/mês) ·{' '}
               <span className="text-violet-400">Barra</span> = pagamento real ·{' '}
               <span className="text-green-400">Verde</span> = saving · <span className="text-red-400">Vermelho</span> = déficit
             </p>

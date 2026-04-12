@@ -192,11 +192,8 @@ export function buildSavingTimelineData(
         const monthEnd = endOfMonth(cursor)
         const mesLabel = format(cursor, 'MMM/yy', { locale: ptBR }).replace('.', '') // e.g. "jan/25"
 
-        // Use monthly approved value if available, else fall back to CMM linear
+        // Use monthly approved value if available, else fall back to linear VA
         const cmm = monthlyTable[mesLabel] ?? cmmLinear
-        if (Object.keys(monthlyTable).length > 0) {
-          console.log(`[SIGO] saving "${p.nome_projeto}" ${mesLabel}: tabela=${monthlyTable[mesLabel] ?? 'não encontrado'} cmm=${Math.round(cmm)}`)
-        }
 
         const pago = projectLancamentos
           .filter((l) =>

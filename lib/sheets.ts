@@ -166,7 +166,6 @@ export async function fetchValoresAprovados(): Promise<ValoresAprovadosMensais> 
   if (rows.length < 2) return {}
 
   const [header, ...dataRows] = rows
-  console.log(`[SIGO] valores aprovados - cabeçalho bruto: ${JSON.stringify(header)}`)
   // header[0] = "Projeto", header[1..] = month labels e.g. "Jan/25"
   const monthCols = header.slice(1).map((h) => h?.trim().toLowerCase().replace('.', '') ?? '')
 
@@ -183,13 +182,6 @@ export async function fetchValoresAprovados(): Promise<ValoresAprovadosMensais> 
   }
 
   console.log(`[SIGO] valores aprovados mensais: ${Object.keys(result).length} projetos`)
-  console.log(`[SIGO] valores aprovados - cabeçalho: ${JSON.stringify(header)}`)
-  if (dataRows.length > 0) {
-    console.log(`[SIGO] valores aprovados - 1ª linha dados: ${JSON.stringify(dataRows[0])}`)
-  }
-  for (const [proj, meses] of Object.entries(result)) {
-    console.log(`[SIGO]   "${proj}": meses = ${JSON.stringify(meses)}`)
-  }
   return result
 }
 

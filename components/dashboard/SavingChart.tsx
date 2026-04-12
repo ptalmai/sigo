@@ -29,7 +29,7 @@ function MonthTooltip({ active, payload, label }: {
       <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">{label}</p>
       <div className="space-y-1">
         <div className="flex justify-between gap-4">
-          <span className="text-slate-400">Média (CMM)</span>
+          <span className="text-slate-400">Valor Aprovado (VA)</span>
           <span className="tabular-nums text-slate-200">{formatBRL(cmm)}</span>
         </div>
         <div className="flex justify-between gap-4">
@@ -63,7 +63,7 @@ function ProjectMiniChart({ data }: { data: ProjectSavingData }) {
         <div className="min-w-0">
           <p className="truncate text-xs font-semibold text-slate-200">{data.nome_projeto}</p>
           <p className="text-[10px] text-slate-500">
-            CMM: <span className="text-orange-400 font-medium">{formatBRL(data.cmm)}/mês</span>
+            VA: <span className="text-orange-400 font-medium">{formatBRL(data.cmm)}/mês</span>
           </p>
         </div>
         <div className={`flex-shrink-0 rounded-lg px-2.5 py-1 text-center ${isSaving ? 'bg-green-500/10' : 'bg-red-500/10'}`}>
@@ -142,7 +142,7 @@ export function SavingChart({ data }: { data: ProjectSavingData[] }) {
       {/* Global summary */}
       <div className="grid grid-cols-3 gap-3">
         <div className="rounded-lg bg-[#13151e] px-3 py-2 text-center">
-          <p className="text-[10px] font-medium uppercase tracking-wider text-slate-500">Total CMM</p>
+          <p className="text-[10px] font-medium uppercase tracking-wider text-slate-500">Total VA</p>
           <p className="mt-0.5 text-sm font-bold tabular-nums text-slate-200">{formatBRL(totalCmm)}</p>
         </div>
         <div className="rounded-lg bg-[#13151e] px-3 py-2 text-center">
@@ -163,7 +163,7 @@ export function SavingChart({ data }: { data: ProjectSavingData[] }) {
       <div className="flex items-center gap-4 text-[10px] text-slate-500">
         <span className="flex items-center gap-1">
           <span className="h-0.5 w-4 inline-block" style={{ borderTop: '2px dashed #fb923c' }} />
-          Média Aprovada (CMM)
+          Valor Aprovado (VA)
         </span>
         <span className="flex items-center gap-1.5">
           <span className="h-2.5 w-2.5 rounded-sm bg-violet-500 inline-block" />
