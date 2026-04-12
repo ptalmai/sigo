@@ -11,7 +11,11 @@ const SPREADSHEET_ID = process.env.GOOGLE_SPREADSHEET_ID!
 // ── Auth ─────────────────────────────────────────────────────
 
 function getAuthClient() {
-  const keyJson = process.env.GOOGLE_SERVICE_ACCOUNT_KEY!
+  const raw = process.env.GOOGLE_SERVICE_ACCOUNT_KEY!
+  // Accept both plain JSON and base64-encoded JSON (Vercel-safe)
+  const keyJson = raw.trimStart().startsWith('{')
+    ? raw
+    : Buffer.from(raw, 'base64').toString('utf-8')
   const key = JSON.parse(keyJson) as {
     client_email: string
     private_key: string
