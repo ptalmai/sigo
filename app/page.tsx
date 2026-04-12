@@ -19,7 +19,7 @@ async function DashboardContent() {
     throw err
   }
 
-  const { projects: rawProjects, lancamentos, fetchedAt } = data
+  const { projects: rawProjects, lancamentos, valoresAprovados, fetchedAt } = data
   const projects = computeAllProjects(rawProjects, lancamentos)
 
   // KPI aggregates
@@ -98,7 +98,7 @@ async function DashboardContent() {
 
       </main>
 
-      <DashboardClient projects={projects} lancamentos={lancamentos} />
+      <DashboardClient projects={projects} lancamentos={lancamentos} valoresAprovados={valoresAprovados} />
     </>
   )
 }

@@ -6,7 +6,7 @@ import { ProjectsTable } from '@/components/dashboard/ProjectsTable'
 import { BurnVsExecutionChart } from '@/components/dashboard/BurnVsExecutionChart'
 import { SavingChart } from '@/components/dashboard/SavingChart'
 import { buildBurnVsExecutionData, buildSavingTimelineData } from '@/lib/calculations'
-import type { ProjectWithMetrics, ProjectStatus, HealthScoreStatus, RawLancamento } from '@/types'
+import type { ProjectWithMetrics, ProjectStatus, HealthScoreStatus, RawLancamento, ValoresAprovadosMensais } from '@/types'
 
 const STATUS_OPTIONS: ProjectStatus[] = ['Ativo', 'Pausado', 'Concluído']
 const HEALTH_OPTIONS: HealthScoreStatus[] = ['Saudável', 'Atenção', 'Em Risco']
@@ -14,9 +14,10 @@ const HEALTH_OPTIONS: HealthScoreStatus[] = ['Saudável', 'Atenção', 'Em Risco
 interface Props {
   projects: ProjectWithMetrics[]
   lancamentos: RawLancamento[]
+  valoresAprovados: ValoresAprovadosMensais
 }
 
-export function DashboardClient({ projects, lancamentos }: Props) {
+export function DashboardClient({ projects, lancamentos, valoresAprovados }: Props) {
   const [nome, setNome] = useState('')
   const [status, setStatus] = useState<ProjectStatus | ''>('')
   const [health, setHealth] = useState<HealthScoreStatus | ''>('')
@@ -31,7 +32,7 @@ export function DashboardClient({ projects, lancamentos }: Props) {
   }, [projects, nome, status, health])
 
   const burnData = useMemo(() => buildBurnVsExecutionData(filtered), [filtered])
-  const savingData = useMemo(() => buildSavingTimelineData(filtered, lancamentos), [filtered, lancamentos])
+  const savingData = useMemo(() => buildSavingTimelineData(filtered, lancamentos, valoresAprovados), [filtered, lancamentos, valoresAprovados])
 
   const hasFilters = nome || status || health
 

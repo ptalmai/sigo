@@ -15,6 +15,7 @@ import type {
   SavingDeficitPoint,
   SavingTimelinePoint,
   ProjectSavingData,
+  ValoresAprovadosMensais,
 } from '@/types'
 
 // ── Health Score ──────────────────────────────────────────────
@@ -158,6 +159,7 @@ export function buildSavingDeficitData(
 export function buildSavingTimelineData(
   projects: ProjectWithMetrics[],
   lancamentos: RawLancamento[],
+  valoresAprovados: ValoresAprovadosMensais = {},
 ): ProjectSavingData[] {
   if (projects.length === 0) return []
 
@@ -168,13 +170,16 @@ export function buildSavingTimelineData(
       )
       if (projectLancamentos.length === 0) return null
 
-      // CMM for this project (fixed)
+      // CMM linear (fallback when monthly table has no data for a month)
       const startDate = parseBRDate(p.data_inicio)
       const endDate = parseBRDate(p.data_fim)
       const duration = Math.max(differenceInCalendarMonths(endDate, startDate), 1)
-      const cmm = p.valor_aprovado > 0 ? p.valor_aprovado / duration : 0
+      const cmmLinear = p.valor_aprovado > 0 ? p.valor_aprovado / duration : 0
 
-      // Monthly timeline: from earliest to latest payment of this project
+      // Monthly lookup for this project (keys already lowercase e.g. "jan/25")
+      const monthlyTable = valoresAprovados[p.nome_projeto] ?? {}
+
+      // Monthly timeline: from earliest to latest payment
       const timestamps = projectLancamentos.map((l) => parseBRDate(l.data_lancamento).getTime())
       const minDate = startOfMonth(new Date(Math.min(...timestamps)))
       const maxDate = startOfMonth(new Date(Math.max(...timestamps)))
@@ -185,6 +190,10 @@ export function buildSavingTimelineData(
       while (cursor <= maxDate) {
         const monthStart = startOfMonth(cursor)
         const monthEnd = endOfMonth(cursor)
+        const mesLabel = format(cursor, 'MMM/yy', { locale: ptBR }) // e.g. "jan/25"
+
+        // Use monthly approved value if available, else fall back to CMM linear
+        const cmm = monthlyTable[mesLabel] ?? cmmLinear
 
         const pago = projectLancamentos
           .filter((l) =>
@@ -196,7 +205,7 @@ export function buildSavingTimelineData(
           .reduce((sum, l) => sum + l.valor, 0)
 
         months.push({
-          mes: format(cursor, 'MMM/yy', { locale: ptBR }),
+          mes: mesLabel,
           cmm: Math.round(cmm),
           pago: Math.round(pago),
           saving: Math.round(cmm - pago),
@@ -210,7 +219,7 @@ export function buildSavingTimelineData(
 
       return {
         nome_projeto: p.nome_projeto,
-        cmm: Math.round(cmm),
+        cmm: Math.round(cmmLinear), // shown in header as reference
         months,
         totalSaving: totalCmm - totalPago,
         totalPago,

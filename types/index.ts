@@ -69,6 +69,12 @@ export interface SavingTimelinePoint {
   saving: number    // cmm - pago (positive = saving, negative = déficit)
 }
 
+/**
+ * Lookup: nome_projeto → mes (lowercase, e.g. "jan/25") → valor aprovado naquele mês
+ * Lido da aba "Valores aprovados". Quando disponível, substitui o CMM linear.
+ */
+export type ValoresAprovadosMensais = Record<string, Record<string, number>>
+
 /** Per-project saving data for small-multiples chart */
 export interface ProjectSavingData {
   nome_projeto: string

@@ -3,7 +3,7 @@
 // ============================================================
 
 import { google } from 'googleapis'
-import type { RawProject, RawLancamento, ProjectStatus, PaymentStatus } from '@/types'
+import type { RawProject, RawLancamento, ProjectStatus, PaymentStatus, ValoresAprovadosMensais } from '@/types'
 import { parseBRDate } from './formatters'
 
 const SPREADSHEET_ID = process.env.GOOGLE_SPREADSHEET_ID!
@@ -161,10 +161,35 @@ export async function fetchLancamentos(): Promise<RawLancamento[]> {
   return lancamentos
 }
 
+export async function fetchValoresAprovados(): Promise<ValoresAprovadosMensais> {
+  const rows = await readSheet('Valores aprovados!A1:ZZ')
+  if (rows.length < 2) return {}
+
+  const [header, ...dataRows] = rows
+  // header[0] = "Projeto", header[1..] = month labels e.g. "Jan/25"
+  const monthCols = header.slice(1).map((h) => h?.trim().toLowerCase() ?? '')
+
+  const result: ValoresAprovadosMensais = {}
+  for (const row of dataRows) {
+    const nome = row[0]?.trim()
+    if (!nome) continue
+    result[nome] = {}
+    monthCols.forEach((mes, i) => {
+      if (!mes) return
+      const val = parseNumber(row[i + 1] ?? '')
+      if (val > 0) result[nome][mes] = val
+    })
+  }
+
+  console.log(`[SIGO] valores aprovados mensais: ${Object.keys(result).length} projetos`)
+  return result
+}
+
 export async function fetchAllSheetData() {
-  const [projects, lancamentos] = await Promise.all([
+  const [projects, lancamentos, valoresAprovados] = await Promise.all([
     fetchProjects(),
     fetchLancamentos(),
+    fetchValoresAprovados(),
   ])
 
   // Warn about lancamentos with no matching project
@@ -182,5 +207,5 @@ export async function fetchAllSheetData() {
     projectNames.has(l.nome_projeto),
   )
 
-  return { projects, lancamentos: validLancamentos, fetchedAt: new Date() }
+  return { projects, lancamentos: validLancamentos, valoresAprovados, fetchedAt: new Date() }
 }
