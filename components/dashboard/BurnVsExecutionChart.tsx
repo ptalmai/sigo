@@ -6,12 +6,12 @@ import {
 import { useTheme } from '@/hooks/useTheme'
 import type { BurnVsExecutionPoint } from '@/types'
 
-function CustomTooltip({ active, payload, label, isDark }: {
+function CustomTooltip({ active, payload, label }: {
   active?: boolean
   payload?: { name: string; value: number; color: string }[]
   label?: string
-  isDark: boolean
 }) {
+  const { isDark } = useTheme()
   if (!active || !payload?.length) return null
   return (
     <div
@@ -41,8 +41,6 @@ export function BurnVsExecutionChart({ data }: { data: BurnVsExecutionPoint[] })
     label: isDark ? '#94a3b8' : '#64748B',
     axisLine: isDark ? '#1e2235' : '#E2E8F0',
     cursor: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.04)',
-    burn: '#7c3aed',
-    exec: '#22c55e',
   }
 
   if (data.length === 0) {
@@ -77,12 +75,12 @@ export function BurnVsExecutionChart({ data }: { data: BurnVsExecutionPoint[] })
           axisLine={false}
           tickLine={false}
         />
-        <Tooltip content={(props) => <CustomTooltip {...props} isDark={isDark} />} cursor={{ fill: COLORS.cursor }} />
+        <Tooltip content={<CustomTooltip />} cursor={{ fill: COLORS.cursor }} />
         <Legend
           wrapperStyle={{ fontSize: '11px', color: COLORS.label, paddingTop: '12px' }}
         />
-        <Bar dataKey="verba_pct" name="% Verba Utilizada" fill={COLORS.burn} radius={[0, 4, 4, 0]} />
-        <Bar dataKey="execucao_pct" name="% Execução Física" fill={COLORS.exec} radius={[0, 4, 4, 0]} />
+        <Bar dataKey="verba_pct" name="% Verba Utilizada" fill="#7c3aed" radius={[0, 4, 4, 0]} />
+        <Bar dataKey="execucao_pct" name="% Execução Física" fill="#22c55e" radius={[0, 4, 4, 0]} />
       </BarChart>
     </ResponsiveContainer>
   )

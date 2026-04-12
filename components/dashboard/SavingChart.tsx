@@ -15,12 +15,12 @@ import { formatBRL } from '@/lib/formatters'
 import { useTheme } from '@/hooks/useTheme'
 import type { ProjectSavingData, SavingTimelinePoint } from '@/types'
 
-function MonthTooltip({ active, payload, label, isDark }: {
+function MonthTooltip({ active, payload, label }: {
   active?: boolean
   payload?: { name: string; value: number }[]
   label?: string
-  isDark: boolean
 }) {
+  const { isDark } = useTheme()
   if (!active || !payload?.length) return null
   const cmm = payload.find((p) => p.name === 'cmm')?.value ?? 0
   const pago = payload.find((p) => p.name === 'pago')?.value ?? 0
@@ -44,7 +44,8 @@ function MonthTooltip({ active, payload, label, isDark }: {
           <span className="text-slate-400">Pago</span>
           <span className={`tabular-nums ${isDark ? 'text-slate-200' : 'text-slate-700'}`}>{formatBRL(pago)}</span>
         </div>
-        <div className={`flex justify-between gap-4 border-t pt-1.5 font-semibold ${isSaving ? 'text-green-400' : 'text-red-400'}`}
+        <div
+          className={`flex justify-between gap-4 border-t pt-1.5 font-semibold ${isSaving ? 'text-green-400' : 'text-red-400'}`}
           style={{ borderColor: isDark ? '#1e2235' : '#E2E8F0' }}
         >
           <span>{isSaving ? 'Saving' : 'Déficit'}</span>
@@ -60,7 +61,8 @@ function MonthTooltip({ active, payload, label, isDark }: {
   )
 }
 
-function ProjectMiniChart({ data, isDark }: { data: ProjectSavingData; isDark: boolean }) {
+function ProjectMiniChart({ data }: { data: ProjectSavingData }) {
+  const { isDark } = useTheme()
   const isSaving = data.totalSaving >= 0
   const pct = data.totalCmm > 0
     ? Math.abs(Math.round((data.totalSaving / data.totalCmm) * 100))
@@ -110,7 +112,7 @@ function ProjectMiniChart({ data, isDark }: { data: ProjectSavingData; isDark: b
             tickLine={false}
           />
           <YAxis hide />
-          <Tooltip content={(props) => <MonthTooltip {...props} isDark={isDark} />} cursor={{ fill: COLORS.cursor }} />
+          <Tooltip content={<MonthTooltip />} cursor={{ fill: COLORS.cursor }} />
           <Bar dataKey="pago" name="pago" radius={[3, 3, 0, 0]}>
             {data.months.map((m: SavingTimelinePoint, i: number) => (
               <Cell key={i} fill={m.saving >= 0 ? '#7c3aed' : '#ef4444'} opacity={0.85} />
@@ -197,7 +199,7 @@ export function SavingChart({ data }: { data: ProjectSavingData[] }) {
       {/* Small multiples grid */}
       <div className={`grid gap-4 ${data.length === 1 ? 'grid-cols-1' : 'grid-cols-1 sm:grid-cols-2'}`}>
         {data.map((d) => (
-          <ProjectMiniChart key={d.nome_projeto} data={d} isDark={isDark} />
+          <ProjectMiniChart key={d.nome_projeto} data={d} />
         ))}
       </div>
     </div>
