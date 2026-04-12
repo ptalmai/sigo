@@ -170,17 +170,21 @@ export function buildSavingTimelineData(
       )
       if (projectLancamentos.length === 0) return null
 
-      // VA linear por mês (fallback quando tabela mensal não tem dado para o mês)
-      const startDate = parseBRDate(p.data_inicio)
-      const endDate = parseBRDate(p.data_fim)
-      const duration = Math.max(differenceInCalendarMonths(endDate, startDate), 1)
-      const cmmLinear = p.valor_aprovado > 0 ? p.valor_aprovado / duration : 0
-      console.log(`[SIGO] saving "${p.nome_projeto}": valor_aprovado=${p.valor_aprovado} inicio=${p.data_inicio} fim=${p.data_fim} duration=${duration} VA/mês=${Math.round(cmmLinear)}`)
-
       // Monthly lookup for this project (keys already lowercase e.g. "jan/25")
       const monthlyTable = valoresAprovados[p.nome_projeto] ?? {}
 
-      // Monthly timeline: from earliest to latest payment
+      // VA médio = média dos meses preenchidos na aba "Valores aprovados"
+      // Fallback: linear (valor_aprovado / duração) quando tabela não existe
+      const monthlyValues = Object.values(monthlyTable).filter((v) => v > 0)
+      const vaTotal = monthlyValues.reduce((s, v) => s + v, 0)
+      const startDate = parseBRDate(p.data_inicio)
+      const endDate = parseBRDate(p.data_fim)
+      const durationLinear = Math.max(differenceInCalendarMonths(endDate, startDate), 1)
+      const cmmLinear = monthlyValues.length > 0
+        ? vaTotal / monthlyValues.length          // média dos meses preenchidos
+        : p.valor_aprovado > 0 ? p.valor_aprovado / durationLinear : 0
+
+      // Monthly timeline: from earliest to latest payment of this project
       const timestamps = projectLancamentos.map((l) => parseBRDate(l.data_lancamento).getTime())
       const minDate = startOfMonth(new Date(Math.min(...timestamps)))
       const maxDate = startOfMonth(new Date(Math.max(...timestamps)))
