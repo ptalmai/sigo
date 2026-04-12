@@ -168,7 +168,7 @@ export async function fetchValoresAprovados(): Promise<ValoresAprovadosMensais> 
   const [header, ...dataRows] = rows
   console.log(`[SIGO] valores aprovados - cabeçalho bruto: ${JSON.stringify(header)}`)
   // header[0] = "Projeto", header[1..] = month labels e.g. "Jan/25"
-  const monthCols = header.slice(1).map((h) => h?.trim().toLowerCase() ?? '')
+  const monthCols = header.slice(1).map((h) => h?.trim().toLowerCase().replace('.', '') ?? '')
 
   const result: ValoresAprovadosMensais = {}
   for (const row of dataRows) {

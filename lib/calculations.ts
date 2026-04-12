@@ -190,7 +190,7 @@ export function buildSavingTimelineData(
       while (cursor <= maxDate) {
         const monthStart = startOfMonth(cursor)
         const monthEnd = endOfMonth(cursor)
-        const mesLabel = format(cursor, 'MMM/yy', { locale: ptBR }) // e.g. "jan/25"
+        const mesLabel = format(cursor, 'MMM/yy', { locale: ptBR }).replace('.', '') // e.g. "jan/25"
 
         // Use monthly approved value if available, else fall back to CMM linear
         const cmm = monthlyTable[mesLabel] ?? cmmLinear
