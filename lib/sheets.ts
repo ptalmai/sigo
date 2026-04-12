@@ -183,8 +183,12 @@ export async function fetchValoresAprovados(): Promise<ValoresAprovadosMensais> 
   }
 
   console.log(`[SIGO] valores aprovados mensais: ${Object.keys(result).length} projetos`)
+  console.log(`[SIGO] valores aprovados - cabeçalho: ${JSON.stringify(header)}`)
+  if (dataRows.length > 0) {
+    console.log(`[SIGO] valores aprovados - 1ª linha dados: ${JSON.stringify(dataRows[0])}`)
+  }
   for (const [proj, meses] of Object.entries(result)) {
-    console.log(`[SIGO]   "${proj}": meses = [${Object.keys(meses).join(', ')}]`)
+    console.log(`[SIGO]   "${proj}": meses = ${JSON.stringify(meses)}`)
   }
   return result
 }
