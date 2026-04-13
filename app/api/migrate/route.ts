@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 
-// Rota temporária para criar tabelas no Turso — REMOVER APÓS USO
+// Rota temporária de diagnóstico — REMOVER APÓS USO
 export async function GET() {
   try {
+    // Criar tabela se não existir
     await prisma.$executeRawUnsafe(`
       CREATE TABLE IF NOT EXISTS "User" (
         "id"                 TEXT NOT NULL PRIMARY KEY,
@@ -18,7 +19,15 @@ export async function GET() {
         "updatedAt"          DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
       )
     `)
-    return NextResponse.json({ ok: true, message: 'Tabela User criada/verificada com sucesso.' })
+
+    // Listar usuários cadastrados (sem dados sensíveis)
+    const users = await prisma.user.findMany({
+      select: { id: true, email: true, createdAt: true },
+    })
+
+    const dbUrl = (process.env.DATABASE_URL ?? 'not set').replace(/authToken=.*/, 'authToken=***')
+
+    return NextResponse.json({ ok: true, dbUrl, userCount: users.length, users })
   } catch (error) {
     return NextResponse.json({ ok: false, error: String(error) }, { status: 500 })
   }
