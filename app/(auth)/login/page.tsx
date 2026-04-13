@@ -1,7 +1,6 @@
 'use client'
 
 import { Suspense, useState, useEffect } from 'react'
-import { signIn } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Eye, EyeOff, Loader2 } from 'lucide-react'
@@ -40,27 +39,59 @@ function LoginForm() {
     setLoading(true)
     setErrors({})
 
-    const result = await signIn('credentials', {
-      email: email.trim().toLowerCase(),
-      password,
-      redirect: false,
-    })
+    try {
+      // 1. Get CSRF token required by Auth.js
+      const csrfRes = await fetch('/api/auth/csrf')
+      const { csrfToken } = await csrfRes.json()
 
-    setLoading(false)
+      // 2. POST credentials directly to Auth.js callback endpoint
+      const res = await fetch('/api/auth/callback/credentials', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          csrfToken,
+          email: email.trim().toLowerCase(),
+          password,
+          json: 'true',
+        }),
+        redirect: 'manual',
+      })
 
-    if (result?.error) {
-      if (result.error.includes('autorizado')) {
-        setErrors({ email: 'Este e-mail não está autorizado a acessar o ARGOS.' })
-      } else if (result.error.includes('encontrado')) {
-        setErrors({ email: 'E-mail não encontrado.' })
-      } else {
-        setErrors({ password: 'Senha incorreta.' })
+      // Auth.js returns a redirect on success (303) or error URL
+      if (res.status === 200 || res.status === 302 || res.status === 303) {
+        // Check if the redirect URL contains an error param
+        const location = res.headers.get('location') ?? res.url ?? ''
+        if (location.includes('error=')) {
+          const url = new URL(location, window.location.origin)
+          const error = url.searchParams.get('error') ?? ''
+          if (error.includes('autorizado')) {
+            setErrors({ email: 'Este e-mail não está autorizado a acessar o ARGOS.' })
+          } else if (error.includes('encontrado')) {
+            setErrors({ email: 'E-mail não encontrado.' })
+          } else {
+            setErrors({ password: 'Credenciais inválidas.' })
+          }
+          setLoading(false)
+          return
+        }
+        router.push('/')
+        router.refresh()
+        return
       }
-      return
+
+      // Try to read JSON error body
+      let errorMsg = 'Credenciais inválidas.'
+      try {
+        const data = await res.json()
+        if (data?.error) errorMsg = data.error
+      } catch { /* ignore */ }
+
+      setErrors({ password: errorMsg })
+    } catch {
+      setErrors({ form: 'Erro de rede. Tente novamente.' })
     }
 
-    router.push('/')
-    router.refresh()
+    setLoading(false)
   }
 
   return (
