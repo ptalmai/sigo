@@ -7,6 +7,7 @@ import { Eye, EyeOff, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { loginAction } from '@/app/actions/auth'
 
 function LoginForm() {
   const router = useRouter()
@@ -39,59 +40,16 @@ function LoginForm() {
     setLoading(true)
     setErrors({})
 
-    try {
-      // 1. Get CSRF token required by Auth.js
-      const csrfRes = await fetch('/api/auth/csrf')
-      const { csrfToken } = await csrfRes.json()
+    const result = await loginAction(email.trim().toLowerCase(), password)
 
-      // 2. POST credentials directly to Auth.js callback endpoint
-      const res = await fetch('/api/auth/callback/credentials', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({
-          csrfToken,
-          email: email.trim().toLowerCase(),
-          password,
-          json: 'true',
-        }),
-        redirect: 'manual',
-      })
-
-      // Auth.js returns a redirect on success (303) or error URL
-      if (res.status === 200 || res.status === 302 || res.status === 303) {
-        // Check if the redirect URL contains an error param
-        const location = res.headers.get('location') ?? res.url ?? ''
-        if (location.includes('error=')) {
-          const url = new URL(location, window.location.origin)
-          const error = url.searchParams.get('error') ?? ''
-          if (error.includes('autorizado')) {
-            setErrors({ email: 'Este e-mail não está autorizado a acessar o ARGOS.' })
-          } else if (error.includes('encontrado')) {
-            setErrors({ email: 'E-mail não encontrado.' })
-          } else {
-            setErrors({ password: 'Credenciais inválidas.' })
-          }
-          setLoading(false)
-          return
-        }
-        router.push('/')
-        router.refresh()
-        return
-      }
-
-      // Try to read JSON error body
-      let errorMsg = 'Credenciais inválidas.'
-      try {
-        const data = await res.json()
-        if (data?.error) errorMsg = data.error
-      } catch { /* ignore */ }
-
-      setErrors({ password: errorMsg })
-    } catch {
-      setErrors({ form: 'Erro de rede. Tente novamente.' })
+    if (!result.ok) {
+      setErrors({ [result.field]: result.message })
+      setLoading(false)
+      return
     }
 
-    setLoading(false)
+    router.push('/')
+    router.refresh()
   }
 
   return (
