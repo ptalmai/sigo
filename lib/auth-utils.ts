@@ -1,6 +1,11 @@
 // ── Domain validation ──────────────────────────────────────────────────────
 
-const ALLOWED_DOMAINS = process.env.ALLOWED_EMAIL_DOMAINS?.split(',').map(d => d.trim().toLowerCase()) ?? []
+// NEXT_PUBLIC_ para client-side, ALLOWED_EMAIL_DOMAINS para server-side
+const ALLOWED_DOMAINS = (
+  process.env.NEXT_PUBLIC_ALLOWED_EMAIL_DOMAINS ??
+  process.env.ALLOWED_EMAIL_DOMAINS ??
+  ''
+).split(',').map(d => d.trim().toLowerCase()).filter(Boolean)
 
 export function isDomainAllowed(email: string): boolean {
   const domain = email.split('@')[1]?.toLowerCase()

@@ -34,8 +34,11 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           </p>
         </div>
 
-        {/* Card */}
-        <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl shadow-lg p-8">
+        {/* Card — sobrescreve --primary para azul Pague Menos */}
+        <div
+          className="bg-[var(--card)] border border-[var(--border)] rounded-xl shadow-lg p-8"
+          style={{ '--primary': '#0066B3', '--ring': '#0066B3', '--accent': '#004d87' } as React.CSSProperties}
+        >
           {children}
         </div>
       </div>
