@@ -118,20 +118,25 @@ export default function LoginPage() {
           <p className="text-xs text-[var(--destructive)] text-center">{errors.form}</p>
         )}
 
-        <Button type="submit" className="w-full mt-2" disabled={loading}>
+        <Button
+          type="submit"
+          className="w-full mt-2"
+          style={{ backgroundColor: '#0066B3', borderColor: '#0066B3' }}
+          disabled={loading}
+        >
           {loading ? <Loader2 size={16} className="animate-spin mr-2" /> : null}
           Entrar
         </Button>
       </form>
 
-      <div className="mt-5 text-center space-y-2 text-sm text-[var(--muted-foreground)]">
+      <div className="mt-5 text-center space-y-2 text-sm">
         <div>
-          <Link href="/cadastro" className="text-[var(--primary)] hover:underline font-medium">
+          <Link href="/cadastro" className="font-medium hover:underline" style={{ color: '#0066B3' }}>
             Primeiro acesso? Cadastre-se aqui
           </Link>
         </div>
         <div>
-          <Link href="/recuperar-senha" className="hover:underline">
+          <Link href="/recuperar-senha" className="hover:underline" style={{ color: '#0066B3' }}>
             Esqueci minha senha
           </Link>
         </div>
