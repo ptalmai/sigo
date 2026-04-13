@@ -1,8 +1,6 @@
 'use client'
 
-export const dynamic = 'force-dynamic'
-
-import { useState, FormEvent, useEffect } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
@@ -11,7 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [email, setEmail] = useState('')
@@ -35,7 +33,7 @@ export default function LoginPage() {
     return Object.keys(newErrors).length === 0
   }
 
-  async function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!validate()) return
 
@@ -78,7 +76,6 @@ export default function LoginPage() {
       )}
 
       <form onSubmit={handleSubmit} noValidate className="space-y-4">
-        {/* E-mail */}
         <div className="space-y-1.5">
           <Label htmlFor="email">E-mail corporativo</Label>
           <Input
@@ -102,7 +99,6 @@ export default function LoginPage() {
           )}
         </div>
 
-        {/* Senha */}
         <div className="space-y-1.5">
           <Label htmlFor="password">Senha</Label>
           <div className="relative">
@@ -113,7 +109,7 @@ export default function LoginPage() {
               placeholder="••••••••"
               value={password}
               onChange={e => setPassword(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && handleSubmit(e as unknown as FormEvent)}
+              onKeyDown={e => e.key === 'Enter' && handleSubmit(e as unknown as React.FormEvent)}
               className={`pr-10 ${errors.password ? 'border-[var(--destructive)]' : ''}`}
             />
             <button
@@ -158,5 +154,13 @@ export default function LoginPage() {
         </div>
       </div>
     </>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
   )
 }
