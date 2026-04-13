@@ -13,14 +13,19 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <div className="w-full max-w-[420px]">
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/logo-paguemenos.svg"
-            alt="Pague Menos"
-            width={52}
-            height={52}
+          <svg
+            width="52"
+            height="52"
+            viewBox="0 0 100 100"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
             className="mb-3"
-          />
+            aria-label="Pague Menos"
+          >
+            <rect width="100" height="100" rx="22" fill="#EF3340" />
+            <rect x="37" y="14" width="26" height="72" rx="13" fill="white" />
+            <rect x="14" y="37" width="72" height="26" rx="13" fill="white" />
+          </svg>
           <h1 className="text-2xl font-bold text-[var(--foreground)] tracking-tight">
             ARGOS
           </h1>
