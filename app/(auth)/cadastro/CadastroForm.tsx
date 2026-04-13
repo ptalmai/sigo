@@ -176,6 +176,7 @@ export default function CadastroForm() {
     setLoading(true)
     setErrors({})
 
+    // ── 1. Registrar conta ──────────────────────────────────────────────
     try {
       const res = await fetch('/api/register', {
         method: 'POST',
@@ -194,20 +195,26 @@ export default function CadastroForm() {
         setLoading(false)
         return
       }
+    } catch {
+      setErrors({ form: 'Erro de rede. Tente novamente.' })
+      setLoading(false)
+      return
+    }
 
-      // Cadastro concluído — faz login automático e vai direto ao dashboard
+    // ── 2. Login automático — falha aqui nunca mostra "Erro ao criar conta" ──
+    try {
       const loginResult = await loginAction(email.trim().toLowerCase(), password)
-      if (!loginResult.ok) {
-        // Conta criada mas login falhou — redireciona para login manual
-        router.push('/login?cadastro=1')
+      if (loginResult.ok) {
+        router.push('/')
+        router.refresh()
         return
       }
-      router.push('/')
-      router.refresh()
     } catch {
-      setErrors({ form: 'Erro ao criar conta. Tente novamente.' })
-      setLoading(false)
+      // loginAction pode lançar NEXT_REDIRECT (Auth.js redireciona direto) — deixa ir
     }
+
+    // Conta criada, mas login automático falhou — manda pro login manual
+    router.push('/login?cadastro=1')
   }
 
   return (
