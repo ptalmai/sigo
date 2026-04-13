@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { isDomainAllowed, getPasswordStrength, SECURITY_QUESTIONS } from '@/lib/auth-utils'
+import { loginAction } from '@/app/actions/auth'
 
 // ── Step Indicator ─────────────────────────────────────────────────────────
 function StepIndicator({ current, total }: { current: number; total: number }) {
@@ -187,18 +188,24 @@ export default function CadastroPage() {
         }),
       })
 
-      const data = await res.json()
-
       if (!res.ok) {
-        setErrors({ form: data.error ?? 'Erro ao criar conta. Tente novamente.' })
+        const data = await res.json().catch(() => ({}))
+        setErrors({ form: (data as { error?: string }).error ?? 'Erro ao criar conta. Tente novamente.' })
         setLoading(false)
         return
       }
 
-      // Cadastro concluído — redireciona para login com mensagem de sucesso
-      router.push('/login?cadastro=1')
+      // Cadastro concluído — faz login automático e vai direto ao dashboard
+      const loginResult = await loginAction(email.trim().toLowerCase(), password)
+      if (!loginResult.ok) {
+        // Conta criada mas login falhou — redireciona para login manual
+        router.push('/login?cadastro=1')
+        return
+      }
+      router.push('/')
+      router.refresh()
     } catch {
-      setErrors({ form: 'Erro de rede. Tente novamente.' })
+      setErrors({ form: 'Erro ao criar conta. Tente novamente.' })
       setLoading(false)
     }
   }
