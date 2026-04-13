@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image'
 import { ThemeToggle } from '@/components/shared/ThemeToggle'
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
@@ -14,7 +13,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <div className="w-full max-w-[420px]">
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
-          <Image
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src="/logo-paguemenos.svg"
             alt="Pague Menos"
             width={52}
