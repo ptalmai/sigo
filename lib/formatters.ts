@@ -37,6 +37,15 @@ export function parseBRDate(ddmmyyyy: string): Date {
   return new Date(Date.UTC(year, month - 1, day))
 }
 
+/** Format compact monetary value for mobile labels: "R$ 12,5k", "R$ 1,2M" */
+export function formatCompact(value: number): string {
+  const abs = Math.abs(value)
+  const sign = value < 0 ? '-' : ''
+  if (abs >= 1_000_000) return `${sign}R$ ${(abs / 1_000_000).toFixed(1).replace('.', ',')}M`
+  if (abs >= 1_000) return `${sign}R$ ${(abs / 1_000).toFixed(1).replace('.', ',')}k`
+  return formatBRL(value)
+}
+
 /** Format relative time: "há X minutos", "há X horas", etc. */
 export function formatRelativeTime(date: Date): string {
   const diffMs = Date.now() - date.getTime()

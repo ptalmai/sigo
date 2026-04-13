@@ -2,7 +2,7 @@
 // SIGO v2.0 — Types (Google Sheets source, read-only)
 // ============================================================
 
-export type ProjectStatus = 'Ativo' | 'Pausado' | 'Concluído'
+export type ProjectStatus = 'Ativo' | 'Pausado' | 'Concluído' | 'Não iniciado' | 'Cancelado'
 export type PaymentStatus = 'Previsto' | 'Pago'
 export type HealthScoreStatus = 'Saudável' | 'Atenção' | 'Em Risco'
 

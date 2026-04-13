@@ -66,9 +66,12 @@ function parseNumber(raw: string): number {
 
 function parseProjectStatus(raw: string): ProjectStatus {
   const s = raw?.trim()
+  if (s === 'Ativo') return 'Ativo'
   if (s === 'Pausado') return 'Pausado'
   if (s === 'Concluído' || s === 'Concluido') return 'Concluído'
-  // Map common variants to Ativo
+  if (s === 'Não iniciado' || s === 'Nao iniciado') return 'Não iniciado'
+  if (s === 'Cancelado') return 'Cancelado'
+  console.warn(`[SIGO] Status desconhecido: "${s}" — tratado como Ativo`)
   return 'Ativo'
 }
 
