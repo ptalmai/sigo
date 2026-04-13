@@ -12,30 +12,21 @@ export async function GET() {
       select: { id: true, email: true, createdAt: true },
     })
 
-    // 2. Testar escrita + leitura
-    const testEmail = '__diag__@pmenos.com.br'
-    let writeTest: string
-    try {
-      await prisma.user.upsert({
-        where: { email: testEmail },
-        update: {},
-        create: {
-          id: 'diag-test-001',
-          email: testEmail,
-          passwordHash: 'test',
-          securityQuestion: 'test',
-          securityAnswerHash: 'test',
-        },
-      })
-      const found = await prisma.user.findUnique({ where: { email: testEmail } })
-      writeTest = found ? 'OK — escrita e leitura funcionam' : 'FALHOU — escreveu mas não leu'
-      // limpar registro de teste
-      await prisma.user.delete({ where: { email: testEmail } }).catch(() => null)
-    } catch (e) {
-      writeTest = `ERRO: ${String(e)}`
+    // 2. Listar todas as tabelas no banco
+    const tables = await prisma.$queryRawUnsafe<{ name: string }[]>(
+      `SELECT name FROM sqlite_master WHERE type='table' ORDER BY name`
+    )
+
+    // 3. Contar rows em cada tabela encontrada
+    const tableCounts: Record<string, number> = {}
+    for (const t of tables) {
+      try {
+        const rows = await prisma.$queryRawUnsafe<{ c: number }[]>(`SELECT count(*) as c FROM "${t.name}"`)
+        tableCounts[t.name] = Number(rows[0]?.c ?? 0)
+      } catch { tableCounts[t.name] = -1 }
     }
 
-    return NextResponse.json({ ok: true, dbUrl, hasToken, userCount: users.length, users, writeTest })
+    return NextResponse.json({ ok: true, dbUrl, hasToken, userCount: users.length, tables, tableCounts })
   } catch (error) {
     return NextResponse.json({ ok: false, dbUrl, hasToken, error: String(error) }, { status: 500 })
   }
