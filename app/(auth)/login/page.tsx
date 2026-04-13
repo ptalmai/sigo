@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, FormEvent } from 'react'
+import { useState, FormEvent, useEffect } from 'react'
 import { signIn } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Eye, EyeOff, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -11,11 +11,19 @@ import { Label } from '@/components/ui/label'
 
 export default function LoginPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState<{ email?: string; password?: string; form?: string }>({})
+  const [successMessage, setSuccessMessage] = useState('')
+
+  useEffect(() => {
+    if (searchParams.get('cadastro') === '1') {
+      setSuccessMessage('Conta criada com sucesso! Faça login para continuar.')
+    }
+  }, [searchParams])
 
   function validate() {
     const newErrors: typeof errors = {}
@@ -60,6 +68,12 @@ export default function LoginPage() {
       <h2 className="text-xl font-semibold text-[var(--foreground)] mb-6 text-center">
         Entrar
       </h2>
+
+      {successMessage && (
+        <p className="text-xs text-green-500 bg-green-500/10 border border-green-500/20 rounded-lg px-3 py-2 text-center mb-4">
+          {successMessage}
+        </p>
+      )}
 
       <form onSubmit={handleSubmit} noValidate className="space-y-4">
         {/* E-mail */}

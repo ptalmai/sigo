@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, FormEvent } from 'react'
-import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Eye, EyeOff, Loader2, Check } from 'lucide-react'
@@ -196,22 +195,8 @@ export default function CadastroPage() {
         return
       }
 
-      // Auto sign-in after registration
-      const result = await signIn('credentials', {
-        email: email.trim().toLowerCase(),
-        password,
-        redirect: false,
-      })
-
-      if (result?.error) {
-        setErrors({ form: 'Conta criada! Faça login para continuar.' })
-        setLoading(false)
-        router.push('/login')
-        return
-      }
-
-      router.push('/')
-      router.refresh()
+      // Cadastro concluído — redireciona para login com mensagem de sucesso
+      router.push('/login?cadastro=1')
     } catch {
       setErrors({ form: 'Erro de rede. Tente novamente.' })
       setLoading(false)
