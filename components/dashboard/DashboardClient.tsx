@@ -212,13 +212,7 @@ export function DashboardClient({ projects, lancamentos, valoresAprovados, fetch
         </section>
 
         {/* Gráficos */}
-        <section aria-label="Gráficos" className="grid grid-cols-1 gap-4 md:gap-6 lg:grid-cols-2">
-          <div className="rounded-xl border border-slate-200 bg-white p-4 md:p-5 dark:border-[#1e2235] dark:bg-[#13151e]">
-            <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-200">Burn vs Execução</h3>
-            <p className="mb-4 text-[11px] text-slate-500">% verba utilizada vs % execução física por projeto</p>
-            <BurnVsExecutionChart data={burnData} />
-          </div>
-
+        <section aria-label="Gráficos" className="flex flex-col gap-4 md:gap-6">
           <div className="rounded-xl border border-slate-200 bg-white p-4 md:p-5 dark:border-[#1e2235] dark:bg-[#13151e]">
             <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-200">Saving Mensal</h3>
             <p className="mb-4 text-[11px] text-slate-500">
@@ -227,6 +221,12 @@ export function DashboardClient({ projects, lancamentos, valoresAprovados, fetch
               <span className="text-green-400">Verde</span> = saving · <span className="text-red-400">Vermelho</span> = déficit
             </p>
             <SavingChart data={savingData} />
+          </div>
+
+          <div className="rounded-xl border border-slate-200 bg-white p-4 md:p-5 dark:border-[#1e2235] dark:bg-[#13151e]">
+            <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-200">Burn vs Execução</h3>
+            <p className="mb-4 text-[11px] text-slate-500">% verba utilizada vs % execução física por projeto</p>
+            <BurnVsExecutionChart data={burnData} />
           </div>
         </section>
       </main>
